@@ -1,0 +1,59 @@
+---
+title: "Exploring Campaign Expenditures"
+output: html_notebook
+---
+
+```{r set up}
+# Don't forget to set your working directory.
+#setwd("~/Documents/github/expenditures")
+#rm(list = ls())
+```
+
+```{r load packages}
+library(tidyverse)
+```
+
+```{r}
+if (file.exists("data/expenditures.csv.zip") == FALSE) {
+ download.file("https://www.strongspace.com/shared/f5g1t7fcsb", 
+               destfile = "data/expenditures.csv.zip", method = "curl") 
+}
+
+unzip("data/expenditures.csv.zip", exdir = "data")
+
+df <- read_csv("data/expenditures.csv", col_names = c(
+  "v1", "v2", "street", "city", "state", "date", "amount", "cat"
+))
+```
+
+```{r summarise by year}
+year_2016 <- df %>%
+  mutate(year = format(date, "%Y")) %>%
+  filter(year == 2016) %>%
+  group_by(year, v2) %>%
+  summarise(n = n(), total = sum(amount)) %>%
+  arrange(desc(total), desc(n))
+
+# TODO Can someone help me write this as a function? Darn SE!
+# Function for summarizing x = chosen year
+#summariseYear <- function(x) {
+#  df %>% 
+#    mutate_(.dots = set_names(format(~date, "%Y"), "year")) %>%
+#    filter_(~year == x) %>%
+#    group_by_(~year, ~v2) %>%
+#    summarise_(.dots = set_names(list(~n, ~sum(amount)), c("n", "total"))) %>%
+#    arrange_(~desc(total), ~desc(n))
+#}
+
+# Example using 2016
+#summariseYear(2016)
+```
+
+```{r compare yearly totals}
+# Which years had the most spending?
+yearly <- df %>%
+  mutate(year = format(date, "%Y")) %>%
+  group_by(year) %>%
+  summarise(n = n(), total = sum(amount)) %>%
+  arrange(desc(total))
+```
