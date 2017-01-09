@@ -36,14 +36,14 @@ year_2016 <- df %>%
 
 # TODO Can someone help me write this as a function? Darn SE!
 # Function for summarizing x = chosen year
-#summariseYear <- function(x) {
-#  df %>% 
-#    mutate_(.dots = set_names(format(~date, "%Y"), "year")) %>%
-#    filter_(~year == x) %>%
-#    group_by_(~year, ~v2) %>%
-#    summarise_(.dots = set_names(list(~n, ~sum(amount)), c("n", "total"))) %>%
-#    arrange_(~desc(total), ~desc(n))
-#}
+summariseYear <- function(df, chosenyear) {
+    df %>%
+        mutate_(.dots = setNames(list(~lubridate::year(date)),"year")) %>%
+        filter_(~year == chosenyear) %>%
+        group_by_(~year, ~v2) %>%
+        summarise_(.dots = setNames(list(~n, ~sum(amount)), c("n", "total"))) %>%
+        arrange_(~desc(total), ~desc(n))
+}
 
 # Example using 2016
 #summariseYear(2016)
