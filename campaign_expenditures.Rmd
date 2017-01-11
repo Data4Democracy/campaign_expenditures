@@ -27,26 +27,18 @@ df <- read_csv("data/expenditures.csv", col_names = c(
 ```
 
 ```{r summarise by year}
-year_2016 <- df %>%
-  mutate(year = format(date, "%Y")) %>%
-  filter(year == 2016) %>%
-  group_by(year, v2) %>%
-  summarise(n = n(), total = sum(amount)) %>%
-  arrange(desc(total), desc(n))
-
-# TODO Can someone help me write this as a function? Darn SE!
 # Function for summarizing x = chosen year
 summariseYear <- function(df, chosenyear) {
     df %>%
         mutate_(.dots = setNames(list(~lubridate::year(date)),"year")) %>%
         filter_(~year == chosenyear) %>%
         group_by_(~year, ~v2) %>%
-        summarise_(.dots = setNames(list(~n, ~sum(amount)), c("n", "total"))) %>%
+        summarise_(.dots = setNames(list(~n(), ~sum(amount)), c("n", "total"))) %>%
         arrange_(~desc(total), ~desc(n))
 }
 
 # Example using 2016
-#summariseYear(2016)
+y_16 <- summariseYear(df, "2016")
 ```
 
 ```{r compare yearly totals}
@@ -56,4 +48,10 @@ yearly <- df %>%
   group_by(year) %>%
   summarise(n = n(), total = sum(amount)) %>%
   arrange(desc(total))
+```
+
+```{r bar plot total by year}
+ggplot(data = yearly) +
+    geom_bar(mapping = aes(x = year, y = total), stat = "identity") +
+    coord_flip()
 ```
