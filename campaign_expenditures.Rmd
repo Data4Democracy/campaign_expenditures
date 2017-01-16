@@ -10,23 +10,50 @@ output: html_notebook
 ```
 
 ```{r load packages}
-library(tidyverse)
+library(tidyverse, quietly = T)
+library(lubridate, quietly = T)
+library(stringr, quietly = T)
 ```
 
-```{r}
+```{r download data}
 if (file.exists("data/expenditures.csv.zip") == FALSE) {
- download.file("https://www.strongspace.com/shared/f5g1t7fcsb", 
-               destfile = "data/expenditures.csv.zip", method = "curl") 
-}
+ download.file(
+   "https://www.strongspace.com/shared/f5g1t7fcsb", 
+   destfile = "data/expenditures.csv.zip",
+   method = "curl"
+   )}
 
 unzip("data/expenditures.csv.zip", exdir = "data")
+```
 
+```{r load dataset}
 df <- read_csv("data/expenditures.csv", col_names = c(
-  "v1", "v2", "street", "city", "state", "date", "amount", "cat"
+  "filing_id", "payee", "street", "city", "state", "date", "amount", "cat"
 ))
+
+df <- mutate(df, just_year = year(date)) # Extract year
+```
+
+```{r categories from 2016}
+# Just travel in 2016
+sixteen <- df %>%
+  filter(just_year == "2016")
+
+# Subset by matching strings  
+# Travel
+travel   <- filter(sixteen, str_detect(cat, regex("travel", ignore_case = T)))
+# Entertainment
+ent      <- filter(sixteen, str_detect(
+  cat, 
+  regex("entertainment", ignore_case = T))
+  )
+# Clothing
+clothing <- filter(sixteen, str_detect(cat, regex("clothing", ignore_case = T)))
 ```
 
 ```{r summarise by year}
+# TODO Need to edit to account for "just_year" variable added in the 
+# load dataset code chunk
 # Function for summarizing x = chosen year
 summariseYear <- function(df, chosenyear) {
     df %>%
@@ -37,8 +64,8 @@ summariseYear <- function(df, chosenyear) {
         arrange_(~desc(total), ~desc(n))
 }
 
-# Example using 2016
-y_16 <- summariseYear(df, "2016")
+# Example using 2016. This takes forever, so commenting out.
+# y_16 <- summariseYear(df, "2016")
 ```
 
 ```{r compare yearly totals}
@@ -52,6 +79,11 @@ yearly <- df %>%
 
 ```{r bar plot total by year}
 ggplot(data = yearly) +
-    geom_bar(mapping = aes(x = year, y = total), stat = "identity") +
-    coord_flip()
+    geom_bar(mapping = aes(reorder(x = year, total), y = total), stat = "identity") +
+    coord_flip() +
+  labs(
+    title = "Total Spending by Year",
+    x = "Year by Total",
+    y = "Total"
+    )
 ```
