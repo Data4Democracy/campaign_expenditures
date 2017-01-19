@@ -27,11 +27,18 @@ unzip("data/expenditures.csv.zip", exdir = "data")
 ```
 
 ```{r load dataset}
-df <- read_csv("data/expenditures.csv", col_names = c(
+# Main expenditures dataset
+expend <- read_csv("data/expenditures.csv", col_names = c(
   "filing_id", "payee", "street", "city", "state", "date", "amount", "cat"
 ))
 
-df <- mutate(df, just_year = year(date)) # Extract year
+expend <- mutate(expend, just_year = year(date)) # Extract year
+
+# Filing ID data
+ids <- read_csv("https://www.strongspace.com/shared/qrdxsuqoqm")
+
+# Join
+df <- left_join(expend, ids, by = "filing_id")
 ```
 
 ```{r categories from 2016}
