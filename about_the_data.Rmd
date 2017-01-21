@@ -1,0 +1,42 @@
+---
+title: 'Campaign Spending: About the Data'
+author: '@eric_bickel and @ryanes'
+date: "1/21/2017"
+output: html_document
+---
+If you haven't already, please review our analysis process to learn more about how to contribute.
+
+## About the Original Datasets
+
+The original datasets were provided by ProPublica and can be downloaded from the following links: 
+
+### Campaign Spending Data 
+
+[Download the campaign spending data](https://www.strongspace.com/shared/f5g1t7fcsb) 
+
+This dataset contains the following:
+
+* column: description
+* filing_id: numeric ID of electronic filing
+* recip_name: recipient name
+* address: recipient street address
+* city: recipient city
+* state: recipient state
+* date: expenditure date
+* amount: amount paid
+* purpose: expenditure purpose
+
+It will also be helpful to read [the metadata description](http://www.fec.gov/finance/disclosure/metadata/DisbursementCategoryCodes.shtml) of the basic codes that the Federal Election Commission uses. 
+
+### Filing IDs, Committee IDs, and Committee Names
+[Download the filing IDs data](https://www.strongspace.com/shared/qrdxsuqoqm) 
+
+This dataset contains the filing IDs and committee names that were merged to the campaign spending data using the `filing_id` column. 
+
+## About the Cleaned Datasets
+
+The cleaned data and other supporting data can be found on our [data.world ProPublica](https://data.world/data4democracy/propublica) page.
+
+The original campaign spending data is about 850 mb, so to make it easier to house we've cleaned it and split it up by year. You can view the [cleaning script](https://github.com/Data4Democracy/campaign_expenditures/blob/master/write_by_year.Rmd) here, including how we handled unusual date values. 
+
+To keep things consistent, please use links to our data.world ProPublica page in your scripts whenever possible. We're working on a way to house the original campaign spending data on data.world.
