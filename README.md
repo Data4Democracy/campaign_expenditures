@@ -11,7 +11,7 @@ output: html_document
 
 **Project Description:** This ProPublica repository is part of Data for Democracy. Our purpose is to collaboratively work through analytic processes that support the journalism at ProPublica. This repository in particular contains analysis of campaign spending data.
 
-New contributors should review the analysis workflow below and then read the dataset description to access the campaign spending data and review the data cleaning methods.
+New contributors should review the analysis workflow below and then read the [dataset description](https://github.com/Data4Democracy/campaign_expenditures/blob/master/about_the_data.Rmd) to access the campaign spending data and review the data cleaning methods.
 
 ## Analysis Workflow
 
