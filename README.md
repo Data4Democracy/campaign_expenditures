@@ -1,13 +1,17 @@
 ---
-title: "Draft Read Me"
-author: "Eric and Ryan"
+title: "Campaign Spending Analysis: Read This First"
+author: "@eric_bickel and @ryanes"
 date: "1/17/2017"
 output: html_document
 ---
 
 **Slack:** #propublica
 
-**Project Description:** This ProPublica repository is part of Data for Democracy. Our purpose is to collaboratively work through analytic processes that support the journalism at ProPublica. 
+**Project Leads:** @eric_bickel, @ryanes
+
+**Project Description:** This ProPublica repository is part of Data for Democracy. Our purpose is to collaboratively work through analytic processes that support the journalism at ProPublica. This repository in particular contains analysis of campaign spending data.
+
+New contributors should review the analysis workflow below and then read the dataset description to access the campaign spending data and review the data cleaning methods.
 
 ## Analysis Workflow
 
