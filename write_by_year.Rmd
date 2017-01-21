@@ -1,0 +1,84 @@
+---
+title: "Cleaning Campaign Spending Data"
+output: html_notebook
+---
+
+This script downloads the campaign spending dataset and writes separate CSVs by 
+year. Cleaning methods and decisions are documented.
+
+_Reminder: Don't forget to set your working directory._
+
+```{r}
+# Load packages
+library(tidyverse)
+library(lubridate)
+```
+
+```{r}
+# Download file
+if (file.exists("data/expenditures.csv.zip") == FALSE) {
+  download.file(
+    "https://www.strongspace.com/shared/f5g1t7fcsb", 
+    destfile = "data/expenditures.csv.zip",
+    method = "curl"
+  )}
+
+unzip("data/expenditures.csv.zip", exdir = "data")
+```
+
+```{r}
+# Read and clean files
+
+# Main expenditures dataset
+expend <- read_csv("data/expenditures.csv", col_names = c(
+  "filing_id", "payee", "street", "city", "state", "date", "amount", "cat"
+))
+
+expend <- mutate(expend, just_year = year(date)) # Extract year
+
+# Filing ID data
+ids <- read_csv("https://www.strongspace.com/shared/qrdxsuqoqm")
+
+# Join expenditures and filing ID data
+expend <- left_join(expend, ids, by = "filing_id")
+```
+
+Some of these years look like errors, so I'm throwing out the ones that are a 
+single line.
+
+```{r}
+unique(expend$just_year)
+```
+
+```{r}
+# Which ones only have 1 row?
+weird_years <- c(2020, 2091, 2019, 2912, 5012, 2102, 2106, 1899)
+
+# Count rows
+weird_rows <- sapply(
+    weird_years, function(x) {nrow(filter(expend, just_year == x))}
+)
+
+weird_years[which(weird_rows == 1)]
+```
+
+```{r}
+# Remove weird years
+
+expend <- filter(expend, !(just_year %in% weird_years[which(weird_rows == 1)]))
+```
+
+```{r}
+# Write CSVs for each year
+
+writeYears <- function(chosen_year, df) {
+ write_csv(filter(df, just_year == chosen_year), paste0("data/", chosen_year, "_campaign_spending", ".csv")) 
+}
+
+# Write all but NAs
+lapply(unique(expend$just_year), writeYears, df = filter(expend, !is.na(just_year)))
+
+# Write data frame of NA years
+write_csv(filter(expend, is.na(just_year)), "data/NA_campaign_spending.csv")
+```
+
