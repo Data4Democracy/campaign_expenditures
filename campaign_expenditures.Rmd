@@ -3,9 +3,13 @@ title: "Exploring Campaign Expenditures"
 output: html_notebook
 ---
 
+## Download, Load, and Clean Data 
+
+These scripts download the campaign spending data and joins it with the filing 
+ID data. The scripts work with the original data file which is large. If you're interested in working with smaller chunks of data, consider using [this script](https://github.com/Data4Democracy/campaign_expenditures/blob/master/write_by_year.Rmd) to clean and break the data up into separate years.
+
 ```{r set up}
-# Don't forget to set your working directory.
-#setwd("~/Documents/github/expenditures")
+#Don't forget to set your working directory.
 #rm(list = ls())
 ```
 
@@ -14,6 +18,8 @@ library(tidyverse, quietly = T)
 library(lubridate, quietly = T)
 library(stringr, quietly = T)
 ```
+
+Download the zip file if you don't already have it: 
 
 ```{r download data}
 if (file.exists("data/expenditures.csv.zip") == FALSE) {
@@ -27,36 +33,26 @@ unzip("data/expenditures.csv.zip", exdir = "data")
 ```
 
 ```{r load dataset}
-# Main expenditures dataset
+# Load datasets and join
+
+# Load main expenditures dataset
 expend <- read_csv("data/expenditures.csv", col_names = c(
   "filing_id", "payee", "street", "city", "state", "date", "amount", "cat"
 ))
 
 expend <- mutate(expend, just_year = year(date)) # Extract year
 
-# Filing ID data
-ids <- read_csv("https://www.strongspace.com/shared/qrdxsuqoqm")
+# Load filing ID data from data.world
+ids <- read_csv("https://query.data.world/s/49wgf7721iup14no43cb53j38")
 
 # Join
 df <- left_join(expend, ids, by = "filing_id")
 ```
 
-```{r categories from 2016}
-# Just travel in 2016
-sixteen <- df %>%
-  filter(just_year == "2016")
+## Data Exploration 
 
-# Subset by matching strings  
-# Travel
-travel   <- filter(sixteen, str_detect(cat, regex("travel", ignore_case = T)))
-# Entertainment
-ent      <- filter(sixteen, str_detect(
-  cat, 
-  regex("entertainment", ignore_case = T))
-  )
-# Clothing
-clothing <- filter(sixteen, str_detect(cat, regex("clothing", ignore_case = T)))
-```
+This summarizes a year by reporting the total number of transactions and the 
+total spent by each committe: 
 
 ```{r summarise by year}
 # TODO Need to edit to account for "just_year" variable added in the 
@@ -64,9 +60,8 @@ clothing <- filter(sixteen, str_detect(cat, regex("clothing", ignore_case = T)))
 # Function for summarizing x = chosen year
 summariseYear <- function(df, chosenyear) {
     df %>%
-        mutate_(.dots = setNames(list(~lubridate::year(date)),"year")) %>%
-        filter_(~year == chosenyear) %>%
-        group_by_(~year, ~v2) %>%
+        filter_(~just_year == chosenyear) %>%
+        group_by_(~just_year, ~committee_name) %>%
         summarise_(.dots = setNames(list(~n(), ~sum(amount)), c("n", "total"))) %>%
         arrange_(~desc(total), ~desc(n))
 }
@@ -75,6 +70,30 @@ summariseYear <- function(df, chosenyear) {
 # y_16 <- summariseYear(df, "2016")
 ```
 
+For example, here is a dataset summarizing 2016: 
+
+```{r}
+summariseYear(df, 2016)
+```
+
+This creates a dataset of travel related expenses in 2016: 
+
+```{r subset 2016}
+# Subset 2016 data
+sixteen <- df %>%
+  filter(just_year == "2016")
+```
+
+```{r travel 2016}
+# Travel-related expenses in 2016
+travel   <- filter(sixteen, str_detect(cat, regex("travel", ignore_case = T)))
+
+travel
+```
+
+This script totals up the spending per year and sorts it from the highest totals 
+to the lowest: 
+
 ```{r compare yearly totals}
 # Which years had the most spending?
 yearly <- df %>%
@@ -82,6 +101,8 @@ yearly <- df %>%
   group_by(year) %>%
   summarise(n = n(), total = sum(amount)) %>%
   arrange(desc(total))
+
+yearly
 ```
 
 ```{r bar plot total by year}
@@ -89,7 +110,8 @@ ggplot(data = yearly) +
     geom_bar(mapping = aes(reorder(x = year, total), y = total), stat = "identity") +
     coord_flip() +
   labs(
-    title = "Total Spending by Year",
+    title = "Total Campaign Spending by Year", 
+    subtitle = "Years arranged in descending order of total spending",
     x = "Year by Total",
     y = "Total"
     )
