@@ -1,0 +1,32 @@
+---
+title: "Description Text Analysis"
+output: html_notebook
+---
+
+_Reminder: Don't forget to set your working directory._
+
+This script reads in the campaign spending dataset from 2016 and counts the 
+ngrams found in the spending description vector. The counts are stored in the 
+variable `words`. The ngram counts can be used to narrow down spending 
+transactions into discreet categories.
+
+```{r}
+# Load packages
+library(tidyverse)
+library(tidytext)
+```
+
+```{r}
+# Read data from data.world
+expend_16 <- read.csv("https://query.data.world/s/4hhflof4h6w5zsnrdgeux239z")
+```
+
+```{r}
+# Convert into tidy dataset with a words from categories
+data("stop_words")
+
+words <- expend_16 %>%
+  unnest_tokens(word, cat, token = "ngrams", n = 2) %>%
+  anti_join(stop_words, by = "word") %>%
+  count(word, sort = TRUE)
+```
