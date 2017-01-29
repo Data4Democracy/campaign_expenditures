@@ -13,6 +13,7 @@ The original datasets were provided by ProPublica and can be downloaded from the
 ### Campaign Spending Data 
 
 [Download the campaign spending data](https://www.strongspace.com/shared/f5g1t7fcsb) 
+or [download the rds file from data.world](https://query.data.world/s/c8ovyob60ff5dm8oa8r1yrsjh)
 
 This dataset contains the following:
 
@@ -39,4 +40,4 @@ The cleaned data and other supporting data can be found on our [data.world ProPu
 
 The original campaign spending data is about 850 mb, so to make it easier to house we've cleaned it and split it up by year. You can view the [cleaning script](https://github.com/Data4Democracy/campaign_expenditures/blob/master/write_by_year.Rmd) here, including how we handled unusual date values. 
 
-To keep things consistent, please use links to our data.world ProPublica page in your scripts whenever possible. We're working on a way to house the original campaign spending data on data.world.
+To keep things consistent, please use links to our data.world ProPublica page in your scripts whenever possible.
