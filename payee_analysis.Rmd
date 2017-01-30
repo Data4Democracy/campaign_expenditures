@@ -1,0 +1,49 @@
+---
+title: "Payee Analysis"
+output: html_notebook
+---
+
+_Reminder: Don't forget to set your working directory._
+
+This script reads in the campaign spending dataset from 2016 and counts the 
+ngrams found in the spending description vector. The counts are stored in the 
+variable `words`. The ngram counts can be used to narrow down spending 
+transactions into discreet categories.
+
+```{r}
+# Load packages
+library(tidyverse)
+library(tidytext)
+```
+
+```{r}
+# Read 2013-2016 spending data from data.world
+file_names <- c(
+  "https://query.data.world/s/2qjud27woy0hnlngoqk42003k",
+  "https://query.data.world/s/1z87vsse3wqzmfmkt26g1ac6f", 
+  "https://query.data.world/s/6uk5f0kcoj6zdfye0o092v9n5", 
+  "https://query.data.world/s/4hhflof4h6w5zsnrdgeux239z"
+)
+
+all_files <- lapply(file_names, read_csv)
+
+# Combine datasets
+spending <- bind_rows(all_files)
+```
+
+How many unique payees did each committee have?
+
+```{r}
+unique_payees <- spending %>%
+  distinct(just_year, committee_name, payee) %>%
+  group_by(just_year, committee_name) %>%
+  summarise(n = n())
+```
+
+How much money did each payee receive in 2016?
+
+```{r}
+dollars_recd <- spending %>%
+  group_by(just_year, payee) %>%
+  summarise(total_recd = sum(amount), n = n())
+```
