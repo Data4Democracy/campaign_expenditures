@@ -5,10 +5,8 @@ output: html_notebook
 
 _Reminder: Don't forget to set your working directory._
 
-This script reads in the campaign spending dataset from 2016 and counts the 
-ngrams found in the spending description vector. The counts are stored in the 
-variable `words`. The ngram counts can be used to narrow down spending 
-transactions into discreet categories.
+This script reads in the campaign spending datasets from 2013-2016. The number of unique payees per committee each year is stored in `unique_payees`. The total 
+amount received by each payee per year is stored in `dollars_recd`.
 
 ```{r}
 # Load packages
