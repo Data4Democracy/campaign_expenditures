@@ -8,11 +8,6 @@ output: html_notebook
 These scripts download the campaign spending data and joins it with the filing 
 ID data. The scripts work with the original data file which is large. If you're interested in working with smaller chunks of data, consider using [this script](https://github.com/Data4Democracy/campaign_expenditures/blob/master/write_by_year.Rmd) to clean and break the data up into separate years.
 
-```{r set up}
-#Don't forget to set your working directory.
-#rm(list = ls())
-```
-
 ```{r load packages}
 library(tidyverse, quietly = T)
 library(lubridate, quietly = T)
@@ -22,14 +17,20 @@ library(stringr, quietly = T)
 Download the zip file if you don't already have it: 
 
 ```{r download data}
+if (dir.exists("data") == FALSE) {
+  dir.create("data")
+}
+
 if (file.exists("data/expenditures.csv.zip") == FALSE) {
- download.file(
+  download.file(
    "https://www.strongspace.com/shared/f5g1t7fcsb", 
    destfile = "data/expenditures.csv.zip",
    method = "curl"
    )}
 
-unzip("data/expenditures.csv.zip", exdir = "data")
+if (file.exists("data/expenditures.csv") == FALSE) {
+  unzip("data/expenditures.csv.zip", exdir = "data") 
+}
 ```
 
 ```{r load dataset}
