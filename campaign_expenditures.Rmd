@@ -43,7 +43,7 @@ expend <- read_csv("data/expenditures.csv", col_names = c(
 expend <- mutate(expend, just_year = year(date)) # Extract year
 
 # Load filing ID data from data.world
-ids <- read_csv("https://query.data.world/s/49wgf7721iup14no43cb53j38")
+ids <- read_csv("https://query.data.world/s/1siiy0oqmrxt8ec5d7jzmn7gj")
 
 # Join
 df <- left_join(expend, ids, by = "filing_id")
