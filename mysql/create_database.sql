@@ -38,3 +38,8 @@ FIELDS TERMINATED BY ','
 ENCLOSED BY '"'
 LINES TERMINATED BY '\n'
 (filing_id, recip_name, address, city, state, date, amount, purpose);
+
+# create a read only user
+CREATE USER 'reader'@'localhost';
+GRANT SELECT ON campaign_expenditures FROM 'reader'@'localhost';
+FLUSH PRIVILEGES;
