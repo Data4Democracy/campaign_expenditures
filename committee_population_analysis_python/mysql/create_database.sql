@@ -10,7 +10,7 @@ CREATE TABLE filings (
 );
 
 # populate the filing table
-LOAD DATA LOCAL INFILE '../data/filings.csv'
+LOAD DATA LOCAL INFILE '../../data/filings.csv'
 INTO TABLE filings
 FIELDS TERMINATED BY ','  # comma delimited
 ENCLOSED BY '"'           # allow commas within double quotes
@@ -32,7 +32,7 @@ CREATE TABLE expenditures (
 );
 
 # populate expenditure table
-LOAD DATA LOCAL INFILE '../data/expenditures.csv'
+LOAD DATA LOCAL INFILE '../../data/expenditures.csv'
 INTO TABLE expenditures
 FIELDS TERMINATED BY ','
 ENCLOSED BY '"'
