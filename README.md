@@ -9,11 +9,16 @@ output: html_document
 
 **Project Leads:** @eric_bickel, @ryanes
 
-**Project Description:** This ProPublica repository is part of Data for Democracy. Our purpose is to collaboratively work through analytic processes that support the journalism at ProPublica. This repository in particular contains analysis of campaign spending data.
+**Project Description:** This ProPublica repository is part of Data for Democracy. Our purpose is to collaboratively work through analytic processes that support the journalism at ProPublica. This repository in particular contains analysis of campaign spending data. Currently, contributors are focusing on cleaning the campaign spending dataset. We are always open to ideas for how to work with this dataset to make it more useful to ProPublica. Please contact @ryanes or @eric_bickel on [Slack](http://datafordemocracy.org/contact.html) with any suggestions or questions. 
 
 New contributors should review the analysis workflow below and then read the [dataset description](https://github.com/Data4Democracy/campaign_expenditures/blob/master/about_the_data.Rmd) to access the campaign spending data and review the data cleaning methods.
 
 ## Analysis Workflow
+
+Reading, cleaning, and analyzing data should be done in a reproducible notebook 
+format when possible. When submitting pull requests, please submit them from a 
+fork of the repository and on a separate branch. Data for Democracy has [an 
+awesome set of instructions](https://github.com/Data4Democracy/github-playground/blob/master/README.md) for how to do this if you need it. 
 
 ### Organizing Work 
 
